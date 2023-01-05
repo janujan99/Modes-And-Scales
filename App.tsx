@@ -6,7 +6,10 @@ import { NotesState, getNewScaleState } from "./notesState";
 function NoteButton(props: any) {
   return (
     <TouchableOpacity style={styles.noteButton}>
-      <Text style={styles.noteText} onPress={() => props.setText(props.note)}>
+      <Text
+        style={styles.noteText}
+        onPress={() => props.handleNotePress(props.note)}
+      >
         {props.note}
       </Text>
     </TouchableOpacity>
@@ -14,6 +17,19 @@ function NoteButton(props: any) {
 }
 
 function NoteGrid(props: any) {
+  function handleNotePress(note: string) {
+    if (note == notesState.correctNote) {
+      setNotesState({
+        key: notesState.key,
+        mode: notesState.mode,
+        interval: notesState.interval,
+        correctNote: notesState.correctNote,
+        scaleNotes: notesState.scaleNotes,
+        wrongAnswers: notesState.wrongAnswers,
+        correctAnswerReached: true,
+      });
+    }
+  }
   const [notesState, setNotesState] = useState(getNewScaleState());
   return (
     <View style={styles.noteGrid}>
@@ -21,22 +37,26 @@ function NoteGrid(props: any) {
         {notesState.interval}th note of {notesState.key} {notesState.mode}
       </Text>
       <View>
-        <NoteButton note="C" />
-        <NoteButton note="Db" />
-        <NoteButton note="D" />
-        <NoteButton note="Eb" />
-        <NoteButton note="E" />
-        <NoteButton note="F" />
+        <NoteButton note="C" handleNotePress={handleNotePress} />
+        <NoteButton note="Db" handleNotePress={handleNotePress} />
+        <NoteButton note="D" handleNotePress={handleNotePress} />
+        <NoteButton note="Eb" handleNotePress={handleNotePress} />
+        <NoteButton note="E" handleNotePress={handleNotePress} />
+        <NoteButton note="F" handleNotePress={handleNotePress} />
       </View>
       <View>
-        <NoteButton note="Gb" />
-        <NoteButton note="G" />
-        <NoteButton note="Ab" />
-        <NoteButton note="A" />
-        <NoteButton note="Bb" />
-        <NoteButton note="B" />
+        <NoteButton note="Gb" handleNotePress={handleNotePress} />
+        <NoteButton note="G" handleNotePress={handleNotePress} />
+        <NoteButton note="Ab" handleNotePress={handleNotePress} />
+        <NoteButton note="A" handleNotePress={handleNotePress} />
+        <NoteButton note="Bb" handleNotePress={handleNotePress} />
+        <NoteButton note="B" handleNotePress={handleNotePress} />
       </View>
-      <Button title="Next" disabled={true} />
+      <Button
+        title="Next"
+        disabled={!notesState.correctAnswerReached}
+        onPress={() => setNotesState(getNewScaleState())}
+      />
     </View>
   );
 }

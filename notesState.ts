@@ -7,7 +7,9 @@ export interface NotesState {
   mode: string;
   interval: number;
   correctNote: string;
+  scaleNotes: string[];
   wrongAnswers: string[];
+  correctAnswerReached: boolean;
 }
 let notesArr: string[] = [
   "C",
@@ -46,8 +48,8 @@ let notesToNums: Map<string, number> = new Map<string, number>();
 let numsToNotes: Map<number, string> = new Map<number, string>();
 
 for (let i = 0; i < 12; i++) {
-  notesToNums.set(notesArr[i], i + 1);
-  numsToNotes.set(i + 1, notesArr[i]);
+  notesToNums.set(notesArr[i], i);
+  numsToNotes.set(i, notesArr[i]);
 }
 function getMode(note: string, mode: string) {
   let scales: number[] = modes.get(mode)!;
@@ -55,8 +57,10 @@ function getMode(note: string, mode: string) {
   scales.forEach((element) => {
     scaleNums.push(notesToNums.get(note)! + element);
   });
+  //console.log(scaleNums);
   let scaleNotes: string[] = [];
   scaleNums.forEach((element) => {
+    //console.log(numsToNotes.get(element % 12)!);
     scaleNotes.push(numsToNotes.get(element % 12)!);
   });
   return scaleNotes;
@@ -68,12 +72,16 @@ export function getNewScaleState(): NotesState {
 
   let key = notesArr[getRandomInt(12)];
   let scaleNotes = getMode(key, scaleString);
-  let scaleInterval = getRandomInt(7);
+  let scaleInterval = getRandomInt(6) + 1;
   return {
     key: key,
     mode: scaleString == "Ionian" ? "Major" : "Minor",
     interval: scaleInterval + 1,
     correctNote: scaleNotes[scaleInterval],
+    scaleNotes: scaleNotes,
     wrongAnswers: [],
+    correctAnswerReached: false,
   };
 }
+
+//console.log(getMode("G", "Ionian"));
