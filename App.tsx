@@ -7,21 +7,22 @@ function NoteButton(props: any) {
   function handlePress() {
     props.handleNotePress(props.note);
   }
+  var buttonStyle = styles.noteButton;
+  if (props.notesState.wrongAnswers.includes(props.note))
+    buttonStyle = styles.notePressedButton;
+  else if (
+    props.note == props.notesState.correctNote &&
+    props.notesState.correctAnswerReached
+  )
+    buttonStyle = styles.notePressedCorrectButton;
   return (
-    <TouchableOpacity
-      style={
-        props.notesState.wrongAnswers.includes(props.note)
-          ? styles.notePressedButton
-          : styles.noteButton
-      }
-    >
+    <TouchableOpacity style={buttonStyle} onPress={() => handlePress()}>
       <Text
         style={
           props.notesState.wrongAnswers.includes(props.note)
             ? styles.notePressedText
             : styles.noteText
         }
-        onPress={() => handlePress()}
       >
         {props.note}
       </Text>
@@ -29,30 +30,48 @@ function NoteButton(props: any) {
   );
 }
 
-function NoteGrid(props: any) {
+function ScalesQuiz(props: any) {
   function handleNotePress(note: string) {
-    if (note == notesState.correctNote) {
-      setNotesState({
-        key: notesState.key,
-        mode: notesState.mode,
-        interval: notesState.interval,
-        correctNote: notesState.correctNote,
-        scaleNotes: notesState.scaleNotes,
-        wrongAnswers: notesState.wrongAnswers,
-        correctAnswerReached: true,
+    let notesArr: string[] = [
+      "C",
+      "Db",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "Gb",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B",
+    ];
+    if (!notesState.correctAnswerReached) {
+      let wrongAnswers: string[] = [];
+      notesArr.forEach((el) => {
+        if (el != notesState.correctNote) wrongAnswers.push(el);
       });
-      return true;
-    } else {
-      setNotesState({
-        key: notesState.key,
-        mode: notesState.mode,
-        interval: notesState.interval,
-        correctNote: notesState.correctNote,
-        scaleNotes: notesState.scaleNotes,
-        wrongAnswers: notesState.wrongAnswers.concat([note]),
-        correctAnswerReached: false,
-      });
-      return false;
+      if (note == notesState.correctNote) {
+        setNotesState({
+          key: notesState.key,
+          mode: notesState.mode,
+          interval: notesState.interval,
+          correctNote: notesState.correctNote,
+          scaleNotes: notesState.scaleNotes,
+          wrongAnswers: wrongAnswers,
+          correctAnswerReached: true,
+        });
+      } else {
+        setNotesState({
+          key: notesState.key,
+          mode: notesState.mode,
+          interval: notesState.interval,
+          correctNote: notesState.correctNote,
+          scaleNotes: notesState.scaleNotes,
+          wrongAnswers: notesState.wrongAnswers.concat([note]),
+          correctAnswerReached: false,
+        });
+      }
     }
   }
   const [notesState, setNotesState] = useState(getNewScaleState());
@@ -136,7 +155,7 @@ function NoteGrid(props: any) {
 export default function App() {
   return (
     <View style={styles.container}>
-      <NoteGrid />
+      <ScalesQuiz />
       <StatusBar style="auto" />
     </View>
   );
@@ -177,7 +196,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   notePressedText: {
-    color: "red",
+    color: "grey",
     fontWeight: "bold",
   },
 });
