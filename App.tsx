@@ -2,6 +2,8 @@ import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { NotesState, getNewScaleState } from "./notesState";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 function NoteButton(props: any) {
   function handlePress() {
@@ -29,7 +31,14 @@ function NoteButton(props: any) {
     </TouchableOpacity>
   );
 }
-
+function ScalesScreen() {
+  return (
+    <View style={styles.container}>
+      <ScalesQuiz />
+      <StatusBar style="auto" />
+    </View>
+  );
+}
 function ScalesQuiz(props: any) {
   function handleNotePress(note: string) {
     let notesArr: string[] = [
@@ -80,69 +89,71 @@ function ScalesQuiz(props: any) {
       <Text>
         {notesState.interval}th note of {notesState.key} {notesState.mode}
       </Text>
-      <View>
-        <NoteButton
-          note="C"
-          notesState={notesState}
-          handleNotePress={handleNotePress}
-        />
-        <NoteButton
-          note="Db"
-          notesState={notesState}
-          handleNotePress={handleNotePress}
-        />
-        <NoteButton
-          note="D"
-          notesState={notesState}
-          handleNotePress={handleNotePress}
-        />
-        <NoteButton
-          note="Eb"
-          notesState={notesState}
-          handleNotePress={handleNotePress}
-        />
-        <NoteButton
-          note="E"
-          notesState={notesState}
-          handleNotePress={handleNotePress}
-        />
-        <NoteButton
-          note="F"
-          notesState={notesState}
-          handleNotePress={handleNotePress}
-        />
-      </View>
-      <View>
-        <NoteButton
-          note="Gb"
-          notesState={notesState}
-          handleNotePress={handleNotePress}
-        />
-        <NoteButton
-          note="G"
-          notesState={notesState}
-          handleNotePress={handleNotePress}
-        />
-        <NoteButton
-          note="Ab"
-          notesState={notesState}
-          handleNotePress={handleNotePress}
-        />
-        <NoteButton
-          note="A"
-          notesState={notesState}
-          handleNotePress={handleNotePress}
-        />
-        <NoteButton
-          note="Bb"
-          notesState={notesState}
-          handleNotePress={handleNotePress}
-        />
-        <NoteButton
-          note="B"
-          notesState={notesState}
-          handleNotePress={handleNotePress}
-        />
+      <View style={styles.notePane}>
+        <View>
+          <NoteButton
+            note="C"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="Db"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="D"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="Eb"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="E"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="F"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+        </View>
+        <View>
+          <NoteButton
+            note="Gb"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="G"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="Ab"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="A"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="Bb"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="B"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+        </View>
       </View>
       <Button
         title="Next"
@@ -152,12 +163,31 @@ function ScalesQuiz(props: any) {
     </View>
   );
 }
-export default function App() {
+const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <ScalesQuiz />
+      <Button
+        title="Major and Minor"
+        onPress={() => navigation.push("Scales")}
+      />
       <StatusBar style="auto" />
     </View>
+  );
+};
+const Stack = createNativeStackNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: "Modes and Scales" }}
+        />
+        <Stack.Screen name="Scales" component={ScalesScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
@@ -166,8 +196,20 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     justifyContent: "center",
+    alignItems: "center",
   },
   noteGrid: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "black",
+    width: 100,
+    height: 50,
+  },
+  notePane: {
     flex: 1,
     flexDirection: "row",
     backgroundColor: "#fff",
@@ -175,21 +217,25 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderWidth: 1,
     borderColor: "black",
+    margin: 0,
   },
   noteButton: {
     backgroundColor: "red",
     borderRadius: 5,
     padding: 10,
+    margin: 5,
   },
   notePressedButton: {
     backgroundColor: "white",
     borderRadius: 5,
     padding: 10,
+    margin: 5,
   },
   notePressedCorrectButton: {
     backgroundColor: "green",
     borderRadius: 5,
     padding: 10,
+    margin: 5,
   },
   noteText: {
     color: "white",
