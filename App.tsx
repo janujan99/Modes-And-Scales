@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  Image,
+  Button,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import { getNewModeState, getNewScaleState } from "./notesState";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -35,6 +42,14 @@ function ScalesScreen() {
   return (
     <View style={styles.container}>
       <ScalesQuiz />
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+function ModesScreen() {
+  return (
+    <View style={styles.container}>
+      <ModesQuiz />
       <StatusBar style="auto" />
     </View>
   );
@@ -168,6 +183,135 @@ function ScalesQuiz(props: any) {
     </View>
   );
 }
+function ModesQuiz(props: any) {
+  function handleNotePress(note: string) {
+    let notesArr: string[] = [
+      "C",
+      "Db",
+      "D",
+      "Eb",
+      "E",
+      "F",
+      "Gb",
+      "G",
+      "Ab",
+      "A",
+      "Bb",
+      "B",
+    ];
+    if (!notesState.correctAnswerReached) {
+      let wrongAnswers: string[] = [];
+      notesArr.forEach((el) => {
+        if (el != notesState.correctNote) wrongAnswers.push(el);
+      });
+      if (note == notesState.correctNote) {
+        setNotesState({
+          key: notesState.key,
+          mode: notesState.mode,
+          interval: notesState.interval,
+          correctNote: notesState.correctNote,
+          scaleNotes: notesState.scaleNotes,
+          wrongAnswers: wrongAnswers,
+          correctAnswerReached: true,
+        });
+      } else {
+        setNotesState({
+          key: notesState.key,
+          mode: notesState.mode,
+          interval: notesState.interval,
+          correctNote: notesState.correctNote,
+          scaleNotes: notesState.scaleNotes,
+          wrongAnswers: notesState.wrongAnswers.concat([note]),
+          correctAnswerReached: false,
+        });
+      }
+    }
+  }
+  const [notesState, setNotesState] = useState(getNewModeState());
+  let numSuffix: string = "th";
+  if (notesState.interval % 10 == 1) numSuffix = "st";
+  else if (notesState.interval % 10 == 2) numSuffix = "nd";
+  else if (notesState.interval % 10 == 2) numSuffix = "rd";
+  return (
+    <View style={styles.noteGrid}>
+      <Text>
+        {notesState.interval}
+        {numSuffix} note of {notesState.key} {notesState.mode}
+      </Text>
+      <View style={styles.notePane}>
+        <View>
+          <NoteButton
+            note="C"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="Db"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="D"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="Eb"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="E"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="F"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+        </View>
+        <View>
+          <NoteButton
+            note="Gb"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="G"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="Ab"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="A"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="Bb"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+          <NoteButton
+            note="B"
+            notesState={notesState}
+            handleNotePress={handleNotePress}
+          />
+        </View>
+      </View>
+      <Button
+        title="Next"
+        disabled={!notesState.correctAnswerReached}
+        onPress={() => setNotesState(getNewModeState())}
+      />
+    </View>
+  );
+}
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
@@ -175,6 +319,7 @@ const HomeScreen = ({ navigation }) => {
         title="Major and Minor"
         onPress={() => navigation.push("Scales")}
       />
+      <Button title="Modes" onPress={() => navigation.push("Modes")} />
       <StatusBar style="auto" />
     </View>
   );
@@ -191,6 +336,7 @@ export default function App() {
           options={{ title: "Modes and Scales" }}
         />
         <Stack.Screen name="Scales" component={ScalesScreen} />
+        <Stack.Screen name="Modes" component={ModesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -249,5 +395,9 @@ const styles = StyleSheet.create({
   notePressedText: {
     color: "grey",
     fontWeight: "bold",
+  },
+  tinyLogo: {
+    width: 50,
+    height: 50,
   },
 });
