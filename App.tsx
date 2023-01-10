@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { Button, StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { NotesState, getNewScaleState } from "./notesState";
+import { getNewModeState, getNewScaleState } from "./notesState";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -84,10 +84,15 @@ function ScalesQuiz(props: any) {
     }
   }
   const [notesState, setNotesState] = useState(getNewScaleState());
+  let numSuffix: string = "th";
+  if (notesState.interval % 10 == 1) numSuffix = "st";
+  else if (notesState.interval % 10 == 2) numSuffix = "nd";
+  else if (notesState.interval % 10 == 2) numSuffix = "rd";
   return (
     <View style={styles.noteGrid}>
       <Text>
-        {notesState.interval}th note of {notesState.key} {notesState.mode}
+        {notesState.interval}
+        {numSuffix} note of the {notesState.key} {notesState.mode} scale
       </Text>
       <View style={styles.notePane}>
         <View>

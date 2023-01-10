@@ -83,5 +83,21 @@ export function getNewScaleState(): NotesState {
     correctAnswerReached: false,
   };
 }
+export function getNewModeState(): NotesState {
+  let scaleString = modeNames[getRandomInt(7)];
+
+  let key = notesArr[getRandomInt(12)];
+  let scaleNotes = getMode(key, scaleString);
+  let scaleInterval = getRandomInt(6) + 1;
+  return {
+    key: key,
+    mode: scaleString,
+    interval: scaleInterval + 1,
+    correctNote: scaleNotes[scaleInterval],
+    scaleNotes: scaleNotes,
+    wrongAnswers: [],
+    correctAnswerReached: false,
+  };
+}
 
 //console.log(getMode("G", "Ionian"));
