@@ -7,6 +7,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { getNewModeState, getNewScaleState } from "./notesState";
 import { NavigationContainer } from "@react-navigation/native";
@@ -102,10 +103,10 @@ function ScalesQuiz(props: any) {
   let numSuffix: string = "th";
   if (notesState.interval % 10 == 1) numSuffix = "st";
   else if (notesState.interval % 10 == 2) numSuffix = "nd";
-  else if (notesState.interval % 10 == 2) numSuffix = "rd";
+  else if (notesState.interval % 10 == 3) numSuffix = "rd";
   return (
     <View style={styles.noteGrid}>
-      <Text>
+      <Text style={styles.promptText}>
         {notesState.interval}
         {numSuffix} note of the {notesState.key} {notesState.mode} scale
       </Text>
@@ -231,10 +232,10 @@ function ModesQuiz(props: any) {
   let numSuffix: string = "th";
   if (notesState.interval % 10 == 1) numSuffix = "st";
   else if (notesState.interval % 10 == 2) numSuffix = "nd";
-  else if (notesState.interval % 10 == 2) numSuffix = "rd";
+  else if (notesState.interval % 10 == 3) numSuffix = "rd";
   return (
     <View style={styles.noteGrid}>
-      <Text>
+      <Text style={styles.promptText}>
         {notesState.interval}
         {numSuffix} note of {notesState.key} {notesState.mode}
       </Text>
@@ -315,11 +316,22 @@ function ModesQuiz(props: any) {
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Button
-        title="Major and Minor"
-        onPress={() => navigation.push("Scales")}
+      <Image
+        style={styles.tinyLogo}
+        source={require("./png-transparent-musical-note-staff-notes-material-music-note-illustration-angle-text-monochrome.png")}
       />
-      <Button title="Modes" onPress={() => navigation.push("Modes")} />
+      <Pressable
+        style={styles.menuButton}
+        onPress={() => navigation.push("Scales")}
+      >
+        <Text style={styles.menuButtonText}>Major and Minor</Text>
+      </Pressable>
+      <Pressable
+        style={styles.menuButton}
+        onPress={() => navigation.push("Modes")}
+      >
+        <Text style={styles.menuButtonText}>Modes</Text>
+      </Pressable>
       <StatusBar style="auto" />
     </View>
   );
@@ -344,24 +356,27 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 50,
+    paddingBottom: 50,
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "red",
     justifyContent: "center",
     alignItems: "center",
   },
   noteGrid: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "#fff",
+    backgroundColor: "blue",
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
     borderColor: "black",
-    width: 100,
-    height: 50,
+    width: 500,
+    height: 1,
   },
   notePane: {
     flex: 1,
+    width: 500,
     flexDirection: "row",
     backgroundColor: "#fff",
     alignItems: "center",
@@ -372,21 +387,33 @@ const styles = StyleSheet.create({
   },
   noteButton: {
     backgroundColor: "red",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 5,
     padding: 10,
-    margin: 5,
+    margin: 8,
+    width: 60,
+    height: 40,
   },
   notePressedButton: {
     backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 5,
     padding: 10,
-    margin: 5,
+    margin: 8,
+    width: 60,
+    height: 40,
   },
   notePressedCorrectButton: {
     backgroundColor: "green",
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 5,
     padding: 10,
-    margin: 5,
+    margin: 8,
+    width: 60,
+    height: 40,
   },
   noteText: {
     color: "white",
@@ -397,7 +424,26 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   tinyLogo: {
-    width: 50,
-    height: 50,
+    width: 370,
+    height: 250,
+    marginBottom: 60,
+  },
+  promptText: {
+    fontSize: 20,
+    color: "white",
+    fontWeight: "bold",
+  },
+  menuButton: {
+    width: 180,
+    height: 40,
+    borderColor: "white",
+    borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 25,
+  },
+  menuButtonText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });
