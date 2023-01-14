@@ -5526,6 +5526,10 @@ react-native-screens@^3.18.2, "react-native-screens@>= 3.0.0":
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+"react-native-sound@github:zmxv/react-native-sound#HEAD":
+  version "0.11.2"
+  resolved "git+ssh://git@github.com/zmxv/react-native-sound.git#1aa45f25c8c03ea5c17fac18564c3928bd023113"
+
 react-native-web@~0.18.9:
   version "0.18.10"
   resolved "https://registry.npmjs.org/react-native-web/-/react-native-web-0.18.10.tgz"
@@ -5539,7 +5543,7 @@ react-native-web@~0.18.9:
     postcss-value-parser "^4.2.0"
     styleq "^0.1.2"
 
-react-native@*, react-native@0.70.5:
+react-native@*, react-native@^0.70.5, react-native@>=0.8.0:
   version "0.70.5"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.70.5.tgz"
   integrity sha512-5NZM80LC3L+TIgQX/09yiyy48S73wMgpIgN5cCv3XTMR394+KpDI3rBZGH4aIgWWuwijz31YYVF5504+9n2Zfw==

@@ -8,12 +8,45 @@ import {
   View,
   TouchableOpacity,
   Pressable,
+  Platform,
 } from "react-native";
 import { getNewModeState, getNewScaleState } from "./notesState";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Sound from "react-native-sound";
 
 function NoteButton(props: any) {
+  function playNote() {
+    Platform.OS = "ios";
+    var Sound = require("react-native-sound");
+    Sound.setCategory("Playback");
+    var whoosh = new Sound(
+      "./assets/pianoNotes/piano-mp3_" + props.note + "4.mp3",
+      Sound.MAIN_BUNDLE,
+      (error: any) => {
+        if (error) {
+          console.log("failed to load the sound", error);
+          return;
+        }
+        // loaded successfully
+        console.log(
+          "duration in seconds: " +
+            whoosh.getDuration() +
+            "number of channels: " +
+            whoosh.getNumberOfChannels()
+        );
+
+        // Play the sound with an onEnd callback
+        whoosh.play((success: any) => {
+          if (success) {
+            console.log("successfully finished playing");
+          } else {
+            console.log("playback failed due to audio decoding errors");
+          }
+        });
+      }
+    );
+  }
   function handlePress() {
     props.handleNotePress(props.note);
   }
@@ -176,11 +209,25 @@ function ScalesQuiz(props: any) {
           />
         </View>
       </View>
-      <Button
-        title="Next"
+      <TouchableOpacity
+        style={
+          notesState.correctAnswerReached
+            ? styles.menuButton
+            : styles.menuButtonDisabled
+        }
         disabled={!notesState.correctAnswerReached}
         onPress={() => setNotesState(getNewScaleState())}
-      />
+      >
+        <Text
+          style={
+            notesState.correctAnswerReached
+              ? styles.menuButtonText
+              : styles.menuButtonTextDisabled
+          }
+        >
+          Next
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -305,11 +352,25 @@ function ModesQuiz(props: any) {
           />
         </View>
       </View>
-      <Button
-        title="Next"
+      <TouchableOpacity
+        style={
+          notesState.correctAnswerReached
+            ? styles.menuButton
+            : styles.menuButtonDisabled
+        }
         disabled={!notesState.correctAnswerReached}
         onPress={() => setNotesState(getNewModeState())}
-      />
+      >
+        <Text
+          style={
+            notesState.correctAnswerReached
+              ? styles.menuButtonText
+              : styles.menuButtonTextDisabled
+          }
+        >
+          Next
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -318,7 +379,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <Image
         style={styles.tinyLogo}
-        source={require("./png-transparent-musical-note-staff-notes-material-music-note-illustration-angle-text-monochrome.png")}
+        source={require("./assets/musicwhite.jpeg")}
       />
       <Pressable
         style={styles.menuButton}
@@ -366,11 +427,9 @@ const styles = StyleSheet.create({
   noteGrid: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "blue",
+    backgroundColor: "red",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "black",
     width: 500,
     height: 1,
   },
@@ -378,11 +437,9 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 500,
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: "red",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "black",
     margin: 0,
   },
   noteButton: {
@@ -394,6 +451,11 @@ const styles = StyleSheet.create({
     margin: 8,
     width: 60,
     height: 40,
+    shadowColor: "rgba(0, 0, 0, 0.1)",
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: { width: 1, height: 13 },
   },
   notePressedButton: {
     backgroundColor: "white",
@@ -404,9 +466,14 @@ const styles = StyleSheet.create({
     margin: 8,
     width: 60,
     height: 40,
+    shadowColor: "rgba(0, 0, 0, 0.1)",
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: { width: 1, height: 13 },
   },
   notePressedCorrectButton: {
-    backgroundColor: "green",
+    backgroundColor: "#FF7777",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 5,
@@ -414,18 +481,24 @@ const styles = StyleSheet.create({
     margin: 8,
     width: 60,
     height: 40,
+    shadowColor: "rgba(0, 0, 0, 0.1)",
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: { width: 1, height: 13 },
   },
   noteText: {
     color: "white",
     fontWeight: "bold",
   },
   notePressedText: {
-    color: "grey",
+    color: "red",
     fontWeight: "bold",
   },
   tinyLogo: {
-    width: 370,
-    height: 250,
+    backgroundColor: "transparent",
+    width: 380,
+    height: 238,
     marginBottom: 60,
   },
   promptText: {
@@ -442,8 +515,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 25,
   },
+  menuButtonDisabled: {
+    width: 180,
+    height: 40,
+    borderColor: "#FF7777",
+    borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 25,
+  },
   menuButtonText: {
     color: "white",
+    fontWeight: "bold",
+  },
+  menuButtonTextDisabled: {
+    color: "#FF7777",
     fontWeight: "bold",
   },
 });
