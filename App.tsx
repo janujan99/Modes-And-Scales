@@ -1,4 +1,5 @@
-import { useState } from "react";
+import * as React from "react";
+import { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   Image,
@@ -13,41 +14,56 @@ import {
 import { getNewModeState, getNewScaleState } from "./notesState";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Sound from "react-native-sound";
+import { Audio, AVPlaybackSource } from "expo-av";
+import { Sound } from "expo-av/build/Audio";
+const cSound = require("./assets/pianoNotes/piano-mp3_C4.mp3");
+const dbSound = require("./assets/pianoNotes/piano-mp3_Db4.mp3");
+const dSound = require("./assets/pianoNotes/piano-mp3_D4.mp3");
+const ebSound = require("./assets/pianoNotes/piano-mp3_Eb4.mp3");
+const eSound = require("./assets/pianoNotes/piano-mp3_E4.mp3");
+const fSound = require("./assets/pianoNotes/piano-mp3_F4.mp3");
+const gbSound = require("./assets/pianoNotes/piano-mp3_Gb4.mp3");
+const gSound = require("./assets/pianoNotes/piano-mp3_G4.mp3");
+const abSound = require("./assets/pianoNotes/piano-mp3_Ab4.mp3");
+const aSound = require("./assets/pianoNotes/piano-mp3_A4.mp3");
+const bbSound = require("./assets/pianoNotes/piano-mp3_Bb4.mp3");
+const bSound = require("./assets/pianoNotes/piano-mp3_B4.mp3");
+
+//Platform.OS = "ios";
+//Sound.setCategory("Playback");
 
 function NoteButton(props: any) {
-  function playNote() {
-    Platform.OS = "ios";
-    var Sound = require("react-native-sound");
-    Sound.setCategory("Playback");
-    var whoosh = new Sound(
-      "./assets/pianoNotes/piano-mp3_" + props.note + "4.mp3",
-      Sound.MAIN_BUNDLE,
-      (error: any) => {
-        if (error) {
-          console.log("failed to load the sound", error);
-          return;
-        }
-        // loaded successfully
-        console.log(
-          "duration in seconds: " +
-            whoosh.getDuration() +
-            "number of channels: " +
-            whoosh.getNumberOfChannels()
-        );
+  let soundMap = new Map<string, AVPlaybackSource>([
+    ["C", cSound],
+    ["Db", dbSound],
+    ["D", dSound],
+    ["Eb", ebSound],
+    ["E", eSound],
+    ["F", fSound],
+    ["Gb", gbSound],
+    ["G", gSound],
+    ["Ab", abSound],
+    ["A", aSound],
+    ["Bb", bbSound],
+    ["B", bSound],
+  ]);
 
-        // Play the sound with an onEnd callback
-        whoosh.play((success: any) => {
-          if (success) {
-            console.log("successfully finished playing");
-          } else {
-            console.log("playback failed due to audio decoding errors");
-          }
-        });
-      }
-    );
+  async function playSound() {
+    console.log("Loading Sound");
+    try {
+      const { sound, status } = await Audio.Sound.createAsync(
+        soundMap.get(props.note)!,
+        {
+          shouldPlay: true,
+          volume: 1,
+        }
+      );
+      const status2 = await sound.playAsync();
+    } catch (e) {}
   }
-  function handlePress() {
+
+  async function handlePress() {
+    await playSound();
     props.handleNotePress(props.note);
   }
   var buttonStyle = styles.noteButton;
@@ -420,14 +436,14 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 50,
     flex: 1,
-    backgroundColor: "red",
+    backgroundColor: "black",
     justifyContent: "center",
     alignItems: "center",
   },
   noteGrid: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "red",
+    backgroundColor: "black",
     alignItems: "center",
     justifyContent: "center",
     width: 500,
@@ -437,7 +453,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 500,
     flexDirection: "row",
-    backgroundColor: "red",
+    backgroundColor: "black",
     alignItems: "center",
     justifyContent: "center",
     margin: 0,
